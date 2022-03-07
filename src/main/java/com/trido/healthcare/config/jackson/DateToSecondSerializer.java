@@ -1,0 +1,16 @@
+package com.trido.healthcare.config.jackson;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+
+import java.io.IOException;
+import java.util.Date;
+
+public class DateToSecondSerializer extends JsonSerializer<Date> {
+    @Override
+    public void serialize(Date date, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        long dateSeconds = date.getTime()/1000;
+        jsonGenerator.writeString(String.valueOf(dateSeconds));
+    }
+}
