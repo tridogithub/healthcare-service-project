@@ -1,5 +1,6 @@
 package com.trido.healthcare.config;
 
+import com.trido.healthcare.config.token.JwtAuthorizationTokenFilter;
 import com.trido.healthcare.config.user_auth.MyUsernamePasswordAuthenticationConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,12 +10,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
     @Autowired
     private MyUsernamePasswordAuthenticationConfig myUsernamePasswordAuthenticationConfig;
+    @Autowired
+    private JwtAuthorizationTokenFilter jwtAuthorizationTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -32,6 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().anyRequest().permitAll()
                 .and()
                 .apply(myUsernamePasswordAuthenticationConfig)
+                .and().addFilterBefore(jwtAuthorizationTokenFilter, UsernamePasswordAuthenticationFilter.class)
         ;
     }
 }

@@ -23,4 +23,6 @@ jwt:
   secret-key: thisissecretkeyoftrido@additionalwordtoget256bitsenough
   access-token-validity: 900
   refresh-token-validity: 86400
+api:
+  prefix: /api
 

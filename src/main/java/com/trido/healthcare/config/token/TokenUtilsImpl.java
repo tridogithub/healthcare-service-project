@@ -5,17 +5,20 @@ import com.trido.healthcare.constants.Constants;
 import com.trido.healthcare.controller.dto.JwtResponse;
 import com.trido.healthcare.entity.MyUserDetails;
 import com.trido.healthcare.entity.token.UserRefreshToken;
-import com.trido.healthcare.exception.InvalidTokenException;
+import com.trido.healthcare.exception.InvalidRequestException;
 import com.trido.healthcare.service.UserRefreshTokenService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,10 +93,16 @@ public class TokenUtilsImpl implements TokenUtils {
 
     @Override
     public Claims checkValidAccessToken(String accessToken) {
-        Claims claims = getClaimsFromJwtToken(accessToken);
+        Claims claims = null;
+        try {
+            claims = getClaimsFromJwtToken(accessToken);
+        } catch (JwtException e) {
+            throw new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
+                    e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
         if (!userRefreshTokenService.checkValidAccessToken(claims.getId())) {
-            throw new InvalidTokenException(ConstantMessages.INVALID_TOKEN,
-                    String.format(ConstantMessages.EXPIRED_ACCESS_TOKEN, accessToken));
+            throw new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
+                    String.format(ConstantMessages.EXPIRED_ACCESS_TOKEN, accessToken), HttpStatus.UNAUTHORIZED);
         }
         return claims;
     }

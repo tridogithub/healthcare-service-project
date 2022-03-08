@@ -1,6 +1,6 @@
 package com.trido.healthcare.constants;
 
-public class Constants {
+public final class Constants {
     public static final String USER_ID_CLAIMS_NAME = "user_id";
     public static final String ROLE_CLAIMS_NAME = "role";
     public static final String USER_NAME_CLAIMS_NAME = "user_name";

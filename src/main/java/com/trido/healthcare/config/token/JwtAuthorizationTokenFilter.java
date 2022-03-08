@@ -6,11 +6,15 @@ import com.trido.healthcare.config.auth.BearerContextHolder;
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.constants.Constants;
 import com.trido.healthcare.controller.dto.ErrorResponse;
-import com.trido.healthcare.exception.InvalidTokenException;
+import com.trido.healthcare.exception.InvalidRequestException;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,12 +22,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Optional;
 
-@Configuration
-@Order(1)
+@Component
 public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
-    private TokenUtils tokenUtils;
+    private final TokenUtils tokenUtils;
 
     @Autowired
     public JwtAuthorizationTokenFilter(TokenUtils tokenUtils) {
@@ -36,16 +41,14 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             String jwtToken = getJwtToken(httpServletRequest);
             if (jwtToken != null) {
                 //Set auth information to Bearer
-                saveBearerContext(jwtToken);
+                saveToSecurityContext(jwtToken);
             }
             filterChain.doFilter(httpServletRequest, httpServletResponse);
-        } catch (InvalidTokenException e) {
-            ErrorResponse errorResponse = new ErrorResponse(e.getError(), e.getError_description());
+        } catch (InvalidRequestException e) {
+            ErrorResponse errorResponse = new ErrorResponse(e.getTimestamp(), e.getError(), e.getError_description(), e.getHttpStatus());
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpServletResponse.setContentType("application/json");
             httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(errorResponse));
-        } catch (Exception e) {
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         } finally {
             BearerContextHolder.clearContext();
         }
@@ -59,7 +62,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         return null;
     }
 
-    private BearerContext saveBearerContext(String jwtToken) {
+    private void saveToSecurityContext(String jwtToken) {
         //check if the token match with the one on database or not.
         Claims claims = tokenUtils.checkValidAccessToken(jwtToken);
 
@@ -70,14 +73,19 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         BearerContext bearerContext = BearerContextHolder.getContext();
         bearerContext.setBearerToken(jwtToken);
         bearerContext.setUserId(userId.orElseThrow(() ->
-                new InvalidTokenException(ConstantMessages.INVALID_TOKEN, ConstantMessages.INVALID_USER_ID))
+                new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
+                        ConstantMessages.TOKEN_INVALID_USER_ID, HttpStatus.UNAUTHORIZED))
         );
         bearerContext.setUserName(userName.orElseThrow(() ->
-                new InvalidTokenException(ConstantMessages.INVALID_TOKEN, ConstantMessages.INVALID_USERNAME))
+                new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
+                        ConstantMessages.TOKEN_INVALID_USER_NAME, HttpStatus.UNAUTHORIZED))
         );
         bearerContext.setRoleName(role.orElseThrow(() ->
-                new InvalidTokenException(ConstantMessages.INVALID_TOKEN, ConstantMessages.INVALID_ROLE))
+                new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
+                        ConstantMessages.TOKEN_INVALID_ROLE, HttpStatus.UNAUTHORIZED))
         );
-        return bearerContext;
+        Collection<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(role.get());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userName.get(), null, authorities);
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }

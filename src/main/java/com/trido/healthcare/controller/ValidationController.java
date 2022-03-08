@@ -39,7 +39,7 @@ public class ValidationController {
 
         MyUserDetails userDetails = (MyUserDetails) myUserDetailService.loadUserByUsername(username);
         if (userDetails == null) {
-            throw new UsernameNotFoundException(ConstantMessages.INVALID_USERNAME);
+            throw new UsernameNotFoundException(ConstantMessages.TOKEN_INVALID_USER_NAME);
         }
         JwtResponse jwtResponse = tokenUtils.createJwtResponse(userDetails);
         return new ResponseEntity(jwtResponse, HttpStatus.OK);
