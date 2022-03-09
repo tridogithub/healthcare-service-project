@@ -1,7 +1,7 @@
 package com.trido.healthcare.controller;
 
 import com.trido.healthcare.controller.dto.UserDto;
-import com.trido.healthcare.service.UserService;
+import com.trido.healthcare.service.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,30 +21,30 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/users/{userId}")
     public ResponseEntity getUserById(@PathVariable("userId") String userId) {
-        UserDto userDto = userService.getUserDtoByUserId(userId);
+        UserDto userDto = userServiceImpl.getUserDtoByUserId(userId);
         return new ResponseEntity(userDto, HttpStatus.OK);
     }
 
     @GetMapping("/users")
     public ResponseEntity getAllUsers() {
-        List<UserDto> results = userService.getAllUser();
+        List<UserDto> results = userServiceImpl.getAllUser();
         return new ResponseEntity(results, HttpStatus.OK);
     }
 
     @PostMapping("/users")
     public ResponseEntity createUser(@RequestBody UserDto userDto) {
-        UserDto savedUserDto = userService.createNewUser(userDto);
+        UserDto savedUserDto = userServiceImpl.createNewUser(userDto);
         return new ResponseEntity(savedUserDto, HttpStatus.OK);
     }
 
     @DeleteMapping("users/{userId}")
     public ResponseEntity disableUserById(@PathVariable("userId") String userId) {
-        boolean result = userService.disableUser(userId);
-        return new ResponseEntity("User has been deleted", HttpStatus.OK);
+        boolean result = userServiceImpl.deleteUser(userId);
+        return new ResponseEntity(result ? "User has been deleted" : "Fail to delete user", HttpStatus.OK);
     }
 
 

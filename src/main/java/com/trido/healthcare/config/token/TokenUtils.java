@@ -1,7 +1,7 @@
 package com.trido.healthcare.config.token;
 
 import com.trido.healthcare.controller.dto.JwtResponse;
-import com.trido.healthcare.entity.MyUserDetails;
+import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
 import io.jsonwebtoken.Claims;
 
 public interface TokenUtils {

@@ -2,7 +2,7 @@ package com.trido.healthcare.config.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trido.healthcare.config.token.TokenUtils;
-import com.trido.healthcare.entity.MyUserDetails;
+import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
 import com.trido.healthcare.controller.dto.JwtResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

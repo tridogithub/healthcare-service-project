@@ -3,10 +3,10 @@ package com.trido.healthcare.config.token;
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.constants.Constants;
 import com.trido.healthcare.controller.dto.JwtResponse;
-import com.trido.healthcare.entity.MyUserDetails;
+import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
 import com.trido.healthcare.entity.token.UserRefreshToken;
 import com.trido.healthcare.exception.InvalidRequestException;
-import com.trido.healthcare.service.UserRefreshTokenService;
+import com.trido.healthcare.service.impl.UserRefreshTokenServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +31,7 @@ public class TokenUtilsImpl implements TokenUtils {
     private JwtProperties jwtProperties;
 
     @Autowired
-    private UserRefreshTokenService userRefreshTokenService;
+    private UserRefreshTokenServiceImpl userRefreshTokenServiceImpl;
 
     @Override
     public Claims getClaimsFromJwtToken(String jwtToken) {
@@ -87,7 +87,7 @@ public class TokenUtilsImpl implements TokenUtils {
         UserRefreshToken userRefreshToken = new UserRefreshToken(user.getUsername(), refreshTokenId,
                 refreshToken.getBytes(), accessTokenId,
                 currentSecond + jwtProperties.getRefreshTokenValidity());
-        userRefreshTokenService.saveRefreshToken(userRefreshToken);
+        userRefreshTokenServiceImpl.saveRefreshToken(userRefreshToken);
         return jwtResponse;
     }
 
@@ -100,7 +100,7 @@ public class TokenUtilsImpl implements TokenUtils {
             throw new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
                     e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
-        if (!userRefreshTokenService.checkValidAccessToken(claims.getId())) {
+        if (!userRefreshTokenServiceImpl.checkValidAccessToken(claims.getId())) {
             throw new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_TOKEN,
                     String.format(ConstantMessages.EXPIRED_ACCESS_TOKEN, accessToken), HttpStatus.UNAUTHORIZED);
         }

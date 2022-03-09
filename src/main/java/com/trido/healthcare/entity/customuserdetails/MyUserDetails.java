@@ -1,4 +1,4 @@
-package com.trido.healthcare.entity;
+package com.trido.healthcare.entity.customuserdetails;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

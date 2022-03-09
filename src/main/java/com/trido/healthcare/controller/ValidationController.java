@@ -4,9 +4,9 @@ import com.trido.healthcare.config.token.TokenUtils;
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.constants.Constants;
 import com.trido.healthcare.controller.dto.JwtResponse;
-import com.trido.healthcare.entity.MyUserDetails;
-import com.trido.healthcare.service.MyUserDetailService;
-import com.trido.healthcare.service.UserRefreshTokenService;
+import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
+import com.trido.healthcare.service.impl.MyUserDetailService;
+import com.trido.healthcare.service.impl.UserRefreshTokenServiceImpl;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class ValidationController {
     private MyUserDetailService myUserDetailService;
 
     @Autowired
-    private UserRefreshTokenService userRefreshTokenService;
+    private UserRefreshTokenServiceImpl userRefreshTokenServiceImpl;
 
     @PostMapping(path = "/auth/token")
     public ResponseEntity getAccessTokenFromRefreshToken(
@@ -46,7 +46,7 @@ public class ValidationController {
     }
 
     private boolean checkMatchedRefreshToken(String username, String requestRefreshToken) {
-        String savedRefreshToken = userRefreshTokenService.getRefreshTokenByUsername(username);
+        String savedRefreshToken = userRefreshTokenServiceImpl.getRefreshTokenByUsername(username);
         if (savedRefreshToken == null || !requestRefreshToken.equals(savedRefreshToken)) {
             throw new BadCredentialsException("Wrong refresh token");
         }

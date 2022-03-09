@@ -30,7 +30,7 @@ public class UserMapper {
                 throw new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_REQUEST,
                         String.format(ConstantMessages.INVALID_ROLE_NAME, userDto.getRoleName()), HttpStatus.BAD_REQUEST);
             }
-            user.setAuthority(userDto.getAuthority() == null ? userDto.getRoleName() : null);
+            user.setAuthority(userDto.getAuthority() == null ? userDto.getRoleName() : userDto.getAuthority());
             user.setUsername(userDto.getUsername().toLowerCase());
             user.setPassword(userDto.getPassword());
             user.setRoleId(role.get().getId());

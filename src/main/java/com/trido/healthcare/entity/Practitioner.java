@@ -1,5 +1,6 @@
 package com.trido.healthcare.entity;
 
+import com.trido.healthcare.entity.enumm.Gender;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

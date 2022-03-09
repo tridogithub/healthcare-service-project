@@ -21,7 +21,7 @@ server:
   port: 8080
 jwt:
   secret-key: thisissecretkeyoftrido@additionalwordtoget256bitsenough
-  access-token-validity: 900
+  access-token-validity: 3600
   refresh-token-validity: 86400
 api:
   prefix: /api

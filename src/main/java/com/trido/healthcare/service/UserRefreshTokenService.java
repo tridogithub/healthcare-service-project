@@ -1,43 +1,15 @@
 package com.trido.healthcare.service;
 
 import com.trido.healthcare.entity.token.UserRefreshToken;
-import com.trido.healthcare.repository.UserRefreshTokenRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
-import java.util.UUID;
 
-@Service
-@Slf4j
-public class UserRefreshTokenService {
-    @Autowired
-    private UserRefreshTokenRepository userRefreshTokenRepository;
+public interface UserRefreshTokenService {
+    UserRefreshToken saveRefreshToken(@NotNull UserRefreshToken userRefreshToken);
 
-    public UserRefreshToken saveRefreshToken(@NotNull UserRefreshToken userRefreshToken) {
-        Optional<UserRefreshToken> existingUserRefreshToken =
-                userRefreshTokenRepository.findById(userRefreshToken.getUsername());
-        if (!existingUserRefreshToken.isEmpty()) {
-            BeanUtils.copyProperties(userRefreshToken, existingUserRefreshToken.get(), "username");
-            return userRefreshTokenRepository.save(existingUserRefreshToken.get());
-        }
-        return userRefreshTokenRepository.save(userRefreshToken);
-    }
+    String getRefreshTokenByUsername(@NotNull String username);
 
-    public String getRefreshTokenByUsername(@NotNull String username) {
-        Optional<UserRefreshToken> userRefreshToken = userRefreshTokenRepository.findByUsername(username);
-        if (userRefreshToken.isEmpty()) {
-            log.info("User has no refresh token");
-            return null;
-        }
-        return userRefreshToken.get().getRefresh_token().toString();
-    }
+    boolean checkValidAccessToken(String tokenId);
 
-    public boolean checkValidAccessToken(String tokenId) {
-        log.info("access_token_id: " + UUID.fromString(tokenId));
-        return userRefreshTokenRepository.existsByAti(UUID.fromString(tokenId));
-    }
+    void deleteUserToken(String username);
 }

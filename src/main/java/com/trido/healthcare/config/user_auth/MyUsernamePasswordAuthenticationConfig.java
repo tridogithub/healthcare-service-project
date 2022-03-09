@@ -1,7 +1,7 @@
 package com.trido.healthcare.config.user_auth;
 
 import com.trido.healthcare.config.handler.MyAuthenticationSuccessHandler;
-import com.trido.healthcare.service.MyUserDetailService;
+import com.trido.healthcare.service.impl.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

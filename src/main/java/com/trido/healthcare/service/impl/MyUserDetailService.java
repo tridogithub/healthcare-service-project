@@ -1,8 +1,8 @@
-package com.trido.healthcare.service;
+package com.trido.healthcare.service.impl;
 
-import com.trido.healthcare.entity.MyUserDetails;
 import com.trido.healthcare.entity.Role;
 import com.trido.healthcare.entity.User;
+import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
 import com.trido.healthcare.repository.RoleRepository;
 import com.trido.healthcare.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found."));
+        User user = userRepository.findByUsernameAndIsDeleted(username, false).orElseThrow(() -> new UsernameNotFoundException("User not found."));
         if (!user.isEnabled()) {
             throw new DisabledException("Account is disable");
         }
