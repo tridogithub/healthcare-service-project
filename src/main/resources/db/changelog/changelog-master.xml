@@ -5,4 +5,5 @@
     <include file="/db/changelog/changes/01-create-initial-tables.xml"/>
     <include file="/db/changelog/changes/02-create-token-store-table.xml"/>
     <include file="/db/changelog/changes/03-create-patient-practitioner-tables.xml"/>
+    <include file="/db/changelog/changes/04-create-appointment-table.sql"/>
 </databaseChangeLog>

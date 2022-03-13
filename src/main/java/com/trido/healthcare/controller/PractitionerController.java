@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("${api.prefix}")
@@ -29,7 +30,7 @@ public class PractitionerController {
     }
 
     @GetMapping("/practitioners/{practitionerId}")
-    public ResponseEntity getPractitionerById(@PathVariable("practitionerId") String practitionerId) {
+    public ResponseEntity getPractitionerById(@PathVariable("practitionerId") UUID practitionerId) {
         PractitionerDto practitionerDto = practitionerService.getPractitionerById(practitionerId);
         return new ResponseEntity(practitionerDto, HttpStatus.OK);
     }
@@ -41,13 +42,13 @@ public class PractitionerController {
     }
 
     @PutMapping("/practitioners/{practitionerId}")
-    public ResponseEntity updatePractitioners(@PathVariable("practitionerId") String practitionerId, @RequestBody PractitionerDto practitionerDto) {
+    public ResponseEntity updatePractitioners(@PathVariable("practitionerId") UUID practitionerId, @RequestBody PractitionerDto practitionerDto) {
         PractitionerDto updatedPractitionerDto = practitionerService.updatePractitioner(practitionerId, practitionerDto);
         return new ResponseEntity(updatedPractitionerDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/practitioners/{practitionerId}")
-    public ResponseEntity disablePractitioners(@PathVariable("practitionerId") String practitionerId) {
+    public ResponseEntity disablePractitioners(@PathVariable("practitionerId") UUID practitionerId) {
         boolean result = practitionerService.disablePractitioner(practitionerId);
         return new ResponseEntity(result ? "User has been deleted" : "Fail to delete user", HttpStatus.OK);
     }

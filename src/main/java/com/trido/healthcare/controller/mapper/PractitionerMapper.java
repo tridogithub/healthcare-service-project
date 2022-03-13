@@ -11,7 +11,6 @@ public class PractitionerMapper {
         practitioner.setGender(practitionerDto.getGender());
         practitioner.setFirstName(practitionerDto.getFirstName());
         practitioner.setLastName(practitionerDto.getLastName());
-        practitioner.setActive(practitionerDto.getActive());
         practitioner.setBirthDate(practitionerDto.getBirthDate());
         practitioner.setExperience(practitionerDto.getExperience());
         practitioner.setEmail(practitionerDto.getEmail());
@@ -24,7 +23,6 @@ public class PractitionerMapper {
         practitionerDto.setGender(practitioner.getGender());
         practitionerDto.setFirstName(practitioner.getFirstName());
         practitionerDto.setLastName(practitioner.getLastName());
-        practitionerDto.setActive(practitioner.getActive());
         practitionerDto.setBirthDate(practitioner.getBirthDate());
         practitionerDto.setExperience(practitioner.getExperience());
         practitionerDto.setEmail(practitioner.getEmail());

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("${api.prefix}")
@@ -24,7 +25,7 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity getUserById(@PathVariable("userId") String userId) {
+    public ResponseEntity getUserById(@PathVariable("userId") UUID userId) {
         UserDto userDto = userServiceImpl.getUserDtoByUserId(userId);
         return new ResponseEntity(userDto, HttpStatus.OK);
     }
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @DeleteMapping("users/{userId}")
-    public ResponseEntity disableUserById(@PathVariable("userId") String userId) {
+    public ResponseEntity disableUserById(@PathVariable("userId") UUID userId) {
         boolean result = userServiceImpl.deleteUser(userId);
         return new ResponseEntity(result ? "User has been deleted" : "Fail to delete user", HttpStatus.OK);
     }

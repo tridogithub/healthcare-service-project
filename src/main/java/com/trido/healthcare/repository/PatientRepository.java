@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface PatientRepository extends JpaRepository<Patient, UUID> {
-    List<Patient> findAllByIsDeleted(boolean isDelete);
-    Patient findByIdAndIsDeleted(UUID id, boolean isDeleted);
+    List<Patient> findAllByActive(boolean isDelete);
+    Patient findByIdAndActive(UUID id, boolean isDeleted);
     boolean existsByEmail(String email);
 }

@@ -29,8 +29,6 @@ public class PatientDto {
     private String phoneNumber;
     @NotNull
     private String email;
-    @NotNull
-    private Boolean active = true;
     @JsonSerialize(using = LocalDateToFormattedStringSerializer.class)
     private LocalDate birthDate;
 }

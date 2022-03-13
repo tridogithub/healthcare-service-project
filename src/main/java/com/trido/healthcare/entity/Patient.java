@@ -32,6 +32,6 @@ public class Patient extends BaseEntity {
     @NotNull
     private Boolean active = true;
     private LocalDate birthDate;
-    @Column(name = "avatarurl")
-    private String avatarUrl = "";
+    @Column(name = "avatar_url")
+    private String avatarFileName;
 }

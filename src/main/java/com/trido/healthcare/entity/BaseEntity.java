@@ -3,13 +3,12 @@ package com.trido.healthcare.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import com.trido.healthcare.config.auth.BearerContextHolder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
@@ -25,7 +24,9 @@ import java.util.UUID;
 public abstract class BaseEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GenericGenerator(name = "UseExistingIdOtherwiseAutoGenerate",
+            strategy = "com.trido.healthcare.util.UseExistingIdOtherwiseAutoGenerate")
+    @GeneratedValue(generator = "UseExistingIdOtherwiseAutoGenerate")
     @Column(unique = true, nullable = false)
     private UUID id;
 

@@ -4,6 +4,7 @@ import com.trido.healthcare.entity.enumm.Gender;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -26,5 +27,6 @@ public class Practitioner extends BaseEntity {
     private Integer experience;
     @NotNull
     private String email;
-    private String avatarUrl;
+    @Column(name = "avatar_url")
+    private String avatarFileName;
 }

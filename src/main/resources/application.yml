@@ -17,6 +17,9 @@ spring:
     enabled: true
     change-log: classpath:/db/changelog/changelog-master.xml
     default-schema: healthcare_service_schema
+  servlet:
+    multipart:
+      max-file-size: 10MB
 server:
   port: 8080
 jwt:

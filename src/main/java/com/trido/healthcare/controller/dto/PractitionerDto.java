@@ -26,8 +26,6 @@ public class PractitionerDto {
     @NotNull
     private String lastName;
     @NotNull
-    private Boolean active = true;
-    @NotNull
     @JsonSerialize(using = LocalDateToFormattedStringSerializer.class)
     private LocalDate birthDate;
     @NotNull
