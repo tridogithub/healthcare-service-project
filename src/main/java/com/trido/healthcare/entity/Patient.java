@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -20,6 +22,7 @@ public class Patient extends BaseEntity {
     @NotNull
     @JsonSerialize(using = GenderToStringSerializer.class)
     @JsonDeserialize(using = GenderDeserializer.class)
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     @NotNull
     private String firstName;

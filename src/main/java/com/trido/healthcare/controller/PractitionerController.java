@@ -1,8 +1,10 @@
 package com.trido.healthcare.controller;
 
 import com.trido.healthcare.controller.dto.PractitionerDto;
+import com.trido.healthcare.domain.PractitionerFilter;
 import com.trido.healthcare.service.PractitionerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,7 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +29,9 @@ public class PractitionerController {
     private PractitionerService practitionerService;
 
     @GetMapping("/practitioners")
-    public ResponseEntity getAllPractitioners() {
+    public ResponseEntity getAllPractitioners(PractitionerFilter practitionerFilter,
+                                              Pageable pageable,
+                                              @Valid @Pattern(regexp = "[\\+|\\-][a-zA-Z]+") @RequestParam(required = false) List<String> sort) {
         List<PractitionerDto> practitionerDtoList = practitionerService.getAllPractitioners();
         return new ResponseEntity(practitionerDtoList, HttpStatus.OK);
     }

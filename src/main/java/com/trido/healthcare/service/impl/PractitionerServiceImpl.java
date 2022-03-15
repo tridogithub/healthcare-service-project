@@ -4,18 +4,24 @@ import com.trido.healthcare.config.auth.BearerContextHolder;
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.controller.dto.PractitionerDto;
 import com.trido.healthcare.controller.mapper.PractitionerMapper;
+import com.trido.healthcare.domain.PractitionerFilter;
 import com.trido.healthcare.entity.Practitioner;
 import com.trido.healthcare.entity.User;
+import com.trido.healthcare.entity.enumm.Gender;
 import com.trido.healthcare.exception.InvalidRequestException;
 import com.trido.healthcare.exception.StorageNotFoundException;
 import com.trido.healthcare.repository.PractitionerRepository;
 import com.trido.healthcare.service.PractitionerService;
 import com.trido.healthcare.service.StorageService;
 import com.trido.healthcare.service.UserService;
+import com.trido.healthcare.util.SearchUtils;
+import com.trido.healthcare.util.search.PractitionerSearchSpecification;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -129,6 +135,23 @@ public class PractitionerServiceImpl implements PractitionerService {
         practitioner.get().setAvatarFileName(filePath.getFileName().toString());
         practitionerRepository.save(practitioner.get());
         return true;
+    }
+
+    @Override
+    public List<PractitionerDto> searchPractitioners(PractitionerFilter practitionerFilter, Pageable pageable, List<String> sortValues) {
+        PractitionerSearchSpecification practitionerSearchSpecification =
+                new PractitionerSearchSpecification(Gender.getEnumName(practitionerFilter.getGender()), practitionerFilter.getFirstName(),
+                        practitionerFilter.getLastName(), practitionerFilter.getBirthDate(), practitionerFilter.getExperience(), practitionerFilter.getEmail(), true);
+        Pageable practitionerPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SearchUtils.getSortFromListParam(sortValues));
+        List<Practitioner> practitionerList = practitionerRepository.findAll(practitionerSearchSpecification, practitionerPageable).getContent();
+        List<PractitionerDto> practitionerDtoList = new ArrayList<>();
+        practitionerList.forEach(practitioner -> practitionerDtoList.add(practitionerMapper.toDto(practitioner)));
+        return practitionerDtoList;
+    }
+
+    @Override
+    public boolean existsById(UUID practitionerId) {
+        return practitionerRepository.existsByIdAndActive(practitionerId, true);
     }
 
     @Override

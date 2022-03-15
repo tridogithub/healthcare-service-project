@@ -23,4 +23,16 @@ public enum Gender {
             return null;
         }
     }
+
+    public static String getEnumName(Gender gender) {
+        if (gender.equals(Male)) {
+            return "Male";
+        } else if (gender.equals(Female)) {
+            return "Female";
+        } else if (gender.equals(Other)) {
+            return "Other";
+        } else {
+            return null;
+        }
+    }
 }

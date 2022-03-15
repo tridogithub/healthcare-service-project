@@ -30,7 +30,7 @@ public class ValidationController {
     private UserRefreshTokenServiceImpl userRefreshTokenServiceImpl;
 
     @PostMapping(path = "/auth/token")
-    public ResponseEntity getAccessTokenFromRefreshToken(
+    public ResponseEntity<?> getAccessTokenFromRefreshToken(
             @RequestParam(name = Constants.REFRESH_TOKEN_PARAM) String refreshToken
     ) {
         Claims claims = tokenUtils.getClaimsFromJwtToken(refreshToken);
@@ -42,12 +42,12 @@ public class ValidationController {
             throw new UsernameNotFoundException(ConstantMessages.TOKEN_INVALID_USER_NAME);
         }
         JwtResponse jwtResponse = tokenUtils.createJwtResponse(userDetails);
-        return new ResponseEntity(jwtResponse, HttpStatus.OK);
+        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
     }
 
     private boolean checkMatchedRefreshToken(String username, String requestRefreshToken) {
         String savedRefreshToken = userRefreshTokenServiceImpl.getRefreshTokenByUsername(username);
-        if (savedRefreshToken == null || !requestRefreshToken.equals(savedRefreshToken)) {
+        if (!requestRefreshToken.equals(savedRefreshToken)) {
             throw new BadCredentialsException("Wrong refresh token");
         }
         return true;

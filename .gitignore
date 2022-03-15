@@ -1,6 +1,7 @@
 HELP.md
 target/
 .mvn
+healthcare_service/
 
 ### STS ###
 .apt_generated

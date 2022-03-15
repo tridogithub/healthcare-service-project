@@ -1,7 +1,9 @@
 package com.trido.healthcare.service;
 
 import com.trido.healthcare.controller.dto.PractitionerDto;
+import com.trido.healthcare.domain.PractitionerFilter;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,4 +23,8 @@ public interface PractitionerService {
     boolean saveAvatarImage(MultipartFile file, UUID practitionerId);
 
     Resource loadAvatarImage(UUID practitionerId);
+
+    boolean existsById(UUID practitionerId);
+
+    List<PractitionerDto> searchPractitioners(PractitionerFilter practitionerFilter, Pageable pageable, List<String> sortValues);
 }

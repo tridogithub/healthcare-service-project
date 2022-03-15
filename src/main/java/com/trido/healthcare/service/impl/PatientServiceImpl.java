@@ -4,18 +4,24 @@ import com.trido.healthcare.config.auth.BearerContextHolder;
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.controller.dto.PatientDto;
 import com.trido.healthcare.controller.mapper.PatientMapper;
+import com.trido.healthcare.domain.PatientFilter;
 import com.trido.healthcare.entity.Patient;
 import com.trido.healthcare.entity.User;
+import com.trido.healthcare.entity.enumm.Gender;
 import com.trido.healthcare.exception.InvalidRequestException;
 import com.trido.healthcare.exception.StorageNotFoundException;
 import com.trido.healthcare.repository.PatientRepository;
 import com.trido.healthcare.service.PatientService;
 import com.trido.healthcare.service.StorageService;
 import com.trido.healthcare.service.UserService;
+import com.trido.healthcare.util.SearchUtils;
+import com.trido.healthcare.util.search.PatientSearchSpecification;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -130,6 +136,18 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public List<PatientDto> searchPatients(PatientFilter patientFilter, Pageable pageable, List<String> sortValues) {
+        PatientSearchSpecification patientSearchSpecification =
+                new PatientSearchSpecification(Gender.getEnumName(patientFilter.getGender()), patientFilter.getFirstName(),
+                        patientFilter.getLastName(), patientFilter.getPhoneNumber(), patientFilter.getEmail(), patientFilter.getBirthDate(), true);
+        Pageable patientPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SearchUtils.getSortFromListParam(sortValues));
+        List<Patient> patients = patientRepository.findAll(patientSearchSpecification, patientPageable).getContent();
+        List<PatientDto> patientDtoList = new ArrayList<>();
+        patients.forEach(patient -> patientDtoList.add(patientMapper.toDto(patient)));
+        return patientDtoList;
+    }
+
+    @Override
     public Resource loadAvatarImage(UUID patientId) {
         Patient patient = patientRepository.findByIdAndActive(patientId, true);
         if (patient == null) {
@@ -143,5 +161,10 @@ public class PatientServiceImpl implements PatientService {
             throw new StorageNotFoundException(ConstantMessages.NOT_FOUND_AVATAR);
         }
         return file;
+    }
+
+    @Override
+    public boolean existsById(UUID patientId) {
+        return patientRepository.existsByIdAndActive(patientId, true);
     }
 }
