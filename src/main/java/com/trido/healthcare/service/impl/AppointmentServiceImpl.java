@@ -61,14 +61,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDto addAppointment(AppointmentDto appointmentDto) {
-//        if (checkExistingPatientAndPractitioner(appointmentDto.getPatientId(), appointmentDto.getPractitionerId())) {
-        appointmentDto.setPatientId(UUID.randomUUID());
-        appointmentDto.setPractitionerId(UUID.randomUUID());
-        Appointment appointment = appointmentMapper.toEntity(appointmentDto);
-        Appointment savedAppointment = appointmentRepository.save(appointment);
-        return appointmentMapper.toDto(savedAppointment);
-//        }
-//        return null;
+        if (checkExistingPatientAndPractitioner(appointmentDto.getPatientId(), appointmentDto.getPractitionerId())) {
+            appointmentDto.setPatientId(UUID.randomUUID());
+            appointmentDto.setPractitionerId(UUID.randomUUID());
+            Appointment appointment = appointmentMapper.toEntity(appointmentDto);
+            Appointment savedAppointment = appointmentRepository.save(appointment);
+            return appointmentMapper.toDto(savedAppointment);
+        }
+        return null;
     }
 
     @Override
@@ -93,6 +93,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             );
         }
         appointment.setIsDeleted(true);
+        appointmentRepository.save(appointment);
         return true;
     }
 
