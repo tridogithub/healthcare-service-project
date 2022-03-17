@@ -115,6 +115,16 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentDtoList;
     }
 
+    @Override
+    public boolean existsByPatientId(String patientId) {
+        return appointmentRepository.existsByPatientId(UUID.fromString(patientId));
+    }
+
+    @Override
+    public boolean existsByPractitionerId(String practitionerId) {
+        return appointmentRepository.existsByPractitionerId(UUID.fromString(practitionerId));
+    }
+
     private boolean checkExistingPatientAndPractitioner(UUID patientId, UUID practitionerId) {
         if (!patientService.existsById(patientId)) {
             throw new InvalidRequestException(LocalDateTime.now(), ConstantMessages.INVALID_REQUEST,

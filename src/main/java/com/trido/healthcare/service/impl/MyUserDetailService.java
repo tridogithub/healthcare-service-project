@@ -31,7 +31,7 @@ public class MyUserDetailService implements UserDetailsService {
             throw new DisabledException("Account is disable");
         }
         Role role = roleRepository.findById(user.getRoleId()).orElseThrow(() -> new UsernameNotFoundException("User's role not found."));
-        Collection<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(user.getAuthority());
+        Collection<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(role.getRoleName());
         return new MyUserDetails(user.getId(), role.getRoleName(), user.getUsername(), user.getPassword(), user.isEnabled(),
                 user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked(), authorities);
     }

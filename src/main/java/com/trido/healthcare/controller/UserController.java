@@ -36,7 +36,7 @@ public class UserController {
         return new ResponseEntity(results, HttpStatus.OK);
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users/registry")
     public ResponseEntity createUser(@RequestBody UserDto userDto) {
         UserDto savedUserDto = userServiceImpl.createNewUser(userDto);
         return new ResponseEntity(savedUserDto, HttpStatus.OK);

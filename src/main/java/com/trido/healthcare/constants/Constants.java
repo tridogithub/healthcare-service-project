@@ -15,4 +15,9 @@ public final class Constants {
 
     public static final String REFRESH_TOKEN_PARAM = "refresh-token";
 
+    public static final String USER_ROLE = "USER";
+    public static final String PATIENT_ROLE = "PATIENT";
+    public static final String PRACTITIONER_ROLE = "PRACTITIONER";
+    public static final String ADMIN_ROLE = "ADMIN";
+
 }

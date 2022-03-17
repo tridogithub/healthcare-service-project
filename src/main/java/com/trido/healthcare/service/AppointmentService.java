@@ -27,4 +27,8 @@ public interface AppointmentService {
                                             Pageable pageable,
                                             List<String> sort
     );
+
+    boolean existsByPatientId(String patientId);
+
+    boolean existsByPractitionerId(String practitionerId);
 }

@@ -29,7 +29,6 @@ public class MyUsernamePasswordAuthenticationConfig extends SecurityConfigurerAd
 
         MyUsernamePasswordAuthenticationFilter myUsernamePasswordAuthenticationFilter = new MyUsernamePasswordAuthenticationFilter();
         myUsernamePasswordAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        Object test = http.getSharedObject(AuthenticationManager.class);
         myUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(myAuthenticationSuccessHandler);
 
         http.authenticationProvider(myUsernamePasswordAuthenticationProvider)

@@ -11,4 +11,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
 
     Appointment findByIdAndIsDeleted(UUID appointmentId, boolean isDeleted);
 
+    boolean existsByPatientId(UUID patientId);
+
+    boolean existsByPractitionerId(UUID practitionerId);
+
 }
