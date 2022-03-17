@@ -26,4 +26,6 @@ public final class ConstantMessages {
     public static final String CURRENT_USER_NOT_FOUND = "Current user is not existing or disable.";
     public static final String PRACTITIONER_ALREADY_EXIST = "Practitioner already exists.";
 
+    public static final String INTERNAL_SERVER_ERROR = "Internal_server_error";
+
 }

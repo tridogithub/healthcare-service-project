@@ -21,6 +21,8 @@ spring:
     multipart:
       max-file-size: 10MB
 server:
+  error:
+    include-message: always
   port: 8080
 jwt:
   secret-key: thisissecretkeyoftrido@additionalwordtoget256bitsenough
