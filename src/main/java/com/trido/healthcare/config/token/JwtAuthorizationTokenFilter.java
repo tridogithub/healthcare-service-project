@@ -5,7 +5,7 @@ import com.trido.healthcare.config.auth.BearerContext;
 import com.trido.healthcare.config.auth.BearerContextHolder;
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.constants.Constants;
-import com.trido.healthcare.controller.dto.ErrorResponse;
+import com.trido.healthcare.domain.ErrorResponse;
 import com.trido.healthcare.exception.InvalidRequestException;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;

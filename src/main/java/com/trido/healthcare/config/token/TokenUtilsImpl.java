@@ -2,7 +2,7 @@ package com.trido.healthcare.config.token;
 
 import com.trido.healthcare.constants.ConstantMessages;
 import com.trido.healthcare.constants.Constants;
-import com.trido.healthcare.controller.dto.JwtResponse;
+import com.trido.healthcare.domain.JwtResponse;
 import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
 import com.trido.healthcare.entity.token.UserRefreshToken;
 import com.trido.healthcare.exception.InvalidRequestException;

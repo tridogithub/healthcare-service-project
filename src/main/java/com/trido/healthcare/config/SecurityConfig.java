@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     authorizeRequest
                             .antMatchers("/auth/token").permitAll()
                             .antMatchers("/api/users/registry").permitAll()
+                            .antMatchers("/registrationConfirm").permitAll()
                             .antMatchers("/api/users").hasAuthority("ADMIN")
                             .antMatchers("/api/users/{userId}").access("@webAuthorization.checkUserWithIdAuthorization(httpServletRequest, #userId)")
                             .antMatchers("/api/practitioners").hasAnyAuthority("ADMIN")

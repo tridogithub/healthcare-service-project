@@ -3,7 +3,7 @@ package com.trido.healthcare.config.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.trido.healthcare.config.token.TokenUtils;
 import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
-import com.trido.healthcare.controller.dto.JwtResponse;
+import com.trido.healthcare.domain.JwtResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -31,7 +31,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         JwtResponse jwtResponse = tokenUtils.createJwtResponse((MyUserDetails) authentication.getPrincipal());
 
         ObjectMapper objectMapper = new ObjectMapper();
-        log.info(" Login successful ");
+        log.info(" Login successfully. ");
         httpServletResponse.setContentType("application/json;charset=UTF-8");
         httpServletResponse.getWriter().write(objectMapper.writeValueAsString(jwtResponse));
     }

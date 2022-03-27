@@ -1,9 +1,12 @@
 package com.trido.healthcare.controller;
 
 import com.trido.healthcare.controller.dto.UserDto;
+import com.trido.healthcare.registration.OnRegistrationCompleteEvent;
 import com.trido.healthcare.service.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,8 +42,8 @@ public class UserController {
     }
 
     @PostMapping("/users/registry")
-    public ResponseEntity createUser(@RequestBody UserDto userDto) {
-        UserDto savedUserDto = userServiceImpl.createNewUser(userDto);
+    public ResponseEntity createUser(@RequestBody UserDto userDto, HttpServletRequest request) {
+        UserDto savedUserDto = userServiceImpl.createNewUser(userDto, request);
         return new ResponseEntity(savedUserDto, HttpStatus.OK);
     }
 

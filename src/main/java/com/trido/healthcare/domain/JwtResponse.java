@@ -1,4 +1,4 @@
-package com.trido.healthcare.controller.dto;
+package com.trido.healthcare.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.trido.healthcare.config.jackson.DateToSecondSerializer;

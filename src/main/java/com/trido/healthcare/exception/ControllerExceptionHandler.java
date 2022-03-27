@@ -1,7 +1,7 @@
 package com.trido.healthcare.exception;
 
 import com.trido.healthcare.constants.ConstantMessages;
-import com.trido.healthcare.controller.dto.ErrorResponse;
+import com.trido.healthcare.domain.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
