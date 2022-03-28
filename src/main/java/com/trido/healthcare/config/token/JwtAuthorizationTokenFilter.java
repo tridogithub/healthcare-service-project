@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -53,6 +54,11 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             BearerContextHolder.clearContext();
         }
     }
+
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        return new AntPathMatcher().match("/swagger-ui/**", request.getServletPath());
+//    }
 
     private String getJwtToken(HttpServletRequest request) {
         if (request.getHeader(Constants.AUTHORIZATION_HEADER) != null
