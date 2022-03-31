@@ -25,27 +25,27 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity getUserById(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<?> getUserById(@PathVariable("userId") UUID userId) {
         UserDto userDto = userServiceImpl.getUserDtoByUserId(userId);
-        return new ResponseEntity(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
     @GetMapping("/users")
-    public ResponseEntity getAllUsers() {
+    public ResponseEntity<?> getAllUsers() {
         List<UserDto> results = userServiceImpl.getAllUser();
-        return new ResponseEntity(results, HttpStatus.OK);
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
     @PostMapping("/users/registry")
-    public ResponseEntity createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
         UserDto savedUserDto = userServiceImpl.createNewUser(userDto);
-        return new ResponseEntity(savedUserDto, HttpStatus.OK);
+        return new ResponseEntity<>(savedUserDto, HttpStatus.OK);
     }
 
     @DeleteMapping("users/{userId}")
-    public ResponseEntity disableUserById(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<?> disableUserById(@PathVariable("userId") UUID userId) {
         boolean result = userServiceImpl.deleteUser(userId);
-        return new ResponseEntity(result ? "User has been deleted" : "Fail to delete user", HttpStatus.OK);
+        return new ResponseEntity<>(result ? "User has been deleted" : "Fail to delete user", HttpStatus.OK);
     }
 
 

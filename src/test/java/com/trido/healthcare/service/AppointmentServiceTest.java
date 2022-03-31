@@ -1,9 +1,11 @@
 package com.trido.healthcare.service;
 
 import com.trido.healthcare.controller.dto.AppointmentDto;
+import com.trido.healthcare.controller.mapper.AppointmentMapper;
 import com.trido.healthcare.entity.Appointment;
 import com.trido.healthcare.exception.InvalidRequestException;
 import com.trido.healthcare.repository.AppointmentRepository;
+import com.trido.healthcare.service.impl.AppointmentServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +22,6 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @Import(AppointmentTestConfiguration.class)
 public class AppointmentServiceTest {
-    @Autowired
     private AppointmentService appointmentService;
 
     @MockBean
@@ -29,10 +30,12 @@ public class AppointmentServiceTest {
     private PatientService patientService;
     @MockBean
     private PractitionerService practitionerService;
+    @Autowired
+    private AppointmentMapper appointmentMapper;
 
     @Before
     public void setup() {
-
+        appointmentService = new AppointmentServiceImpl(appointmentRepository, appointmentMapper, patientService, practitionerService);
     }
 
     @Test
@@ -58,33 +61,25 @@ public class AppointmentServiceTest {
     @Test
     public void addAppointment_whenPatientIdNotExist_thenThrowException() {
         Mockito.when(patientService.existsById(Mockito.any())).thenReturn(false);
-        Assert.assertThrows(InvalidRequestException.class, () -> {
-            appointmentService.addAppointment(new AppointmentDto());
-        });
+        Assert.assertThrows(InvalidRequestException.class, () -> appointmentService.addAppointment(new AppointmentDto()));
     }
 
     @Test
     public void addAppointment_whenPractitionerIdNotExist_thenThrowException() {
         Mockito.when(practitionerService.existsById(Mockito.any())).thenReturn(false);
-        Assert.assertThrows(InvalidRequestException.class, () -> {
-            appointmentService.addAppointment(new AppointmentDto());
-        });
+        Assert.assertThrows(InvalidRequestException.class, () -> appointmentService.addAppointment(new AppointmentDto()));
     }
 
     @Test
     public void updateAppointment_whenAppointmentNotExist_thenThrowException() {
         Mockito.when(appointmentRepository.findByIdAndIsDeleted(Mockito.any(), Mockito.anyBoolean())).thenReturn(null);
-        Assert.assertThrows(InvalidRequestException.class, () -> {
-            appointmentService.updateAppointment(Mockito.any(), Mockito.any());
-        });
+        Assert.assertThrows(InvalidRequestException.class, () -> appointmentService.updateAppointment(Mockito.any(), Mockito.any()));
     }
 
     @Test
     public void disableAppointment_whenAppointmentNotExist_thenThrowException() {
         Mockito.when(appointmentRepository.findByIdAndIsDeleted(Mockito.any(), Mockito.anyBoolean())).thenReturn(null);
-        Assert.assertThrows(InvalidRequestException.class, () -> {
-            appointmentService.disableAppointment(UUID.randomUUID());
-        });
+        Assert.assertThrows(InvalidRequestException.class, () -> appointmentService.disableAppointment(UUID.randomUUID()));
     }
 
 }

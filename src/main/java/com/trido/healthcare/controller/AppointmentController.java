@@ -36,12 +36,6 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentDto, HttpStatus.OK);
     }
 
-//    @GetMapping("/appointments")
-//    public ResponseEntity<?> getAllAppointment() {
-//        List<AppointmentDto> appointmentDtoList = appointmentService.findAllAppointment();
-//        return new ResponseEntity<>(appointmentDtoList, HttpStatus.OK);
-//    }
-
     @PostMapping("/appointments")
     public ResponseEntity<?> addNewAppointment(@RequestBody AppointmentDto appointmentDto) {
         AppointmentDto savedAppointment = appointmentService.addAppointment(appointmentDto);
@@ -52,7 +46,7 @@ public class AppointmentController {
     public ResponseEntity<?> disableAppointment(@PathVariable("appointmentId") UUID appointmentId,
                                                 @RequestBody AppointmentUpdateDto appointmentUpdateDto) {
         AppointmentDto appointmentDto = appointmentService.updateAppointment(appointmentId, appointmentUpdateDto);
-        return null;
+        return new ResponseEntity<>(appointmentDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/appointments/{appointmentId}")
@@ -68,7 +62,7 @@ public class AppointmentController {
                                                 @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime startTime,
                                                 @RequestParam(required = false) Integer minutesDuration,
                                                 Pageable pageable,
-                                                @Valid @Pattern(regexp = "[\\+|\\-][a-zA-Z]+") @RequestParam(required = false) List<String> sort
+                                                @Valid @Pattern(regexp = "[+|\\-][a-zA-Z]+") @RequestParam(required = false) List<String> sort
     ) {
         List<AppointmentDto> appointmentDtoList =
                 appointmentService.searchAppointments(patientId, practitionerId, status, startTime, minutesDuration, pageable, sort);

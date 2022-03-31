@@ -13,7 +13,6 @@ import com.trido.healthcare.service.PractitionerService;
 import com.trido.healthcare.util.SearchUtils;
 import com.trido.healthcare.util.search.AppointmentSearchSpecification;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -25,18 +24,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
-    @Autowired
-    private AppointmentRepository appointmentRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    @Autowired
-    private AppointmentMapper appointmentMapper;
-    @Autowired
-    private PatientService patientService;
-    @Autowired
-    private PractitionerService practitionerService;
+    private final AppointmentMapper appointmentMapper;
+    private final PatientService patientService;
+    private final PractitionerService practitionerService;
+
+    public AppointmentServiceImpl(AppointmentRepository appointmentRepository, AppointmentMapper appointmentMapper, PatientService patientService, PractitionerService practitionerService) {
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentMapper = appointmentMapper;
+        this.patientService = patientService;
+        this.practitionerService = practitionerService;
+    }
 
     @Override
     public AppointmentDto findAppointmentById(UUID appointmentId) {
@@ -54,9 +57,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public List<AppointmentDto> findAllAppointment() {
         List<Appointment> appointments = appointmentRepository.findAll();
-        List<AppointmentDto> appointmentDtoList = new ArrayList<>();
-        appointments.forEach(appointment -> appointmentDtoList.add(appointmentMapper.toDto(appointment)));
-        return appointmentDtoList;
+        return appointments.stream().map(appointmentMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -111,9 +112,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Pageable appointmentPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SearchUtils.getSortFromListParam(sort));
 
         List<Appointment> appointmentList = appointmentRepository.findAll(appointmentSearchSpecification, appointmentPageable).getContent();
-        List<AppointmentDto> appointmentDtoList = new ArrayList<>();
-        appointmentList.forEach(appointment -> appointmentDtoList.add(appointmentMapper.toDto(appointment)));
-        return appointmentDtoList;
+        return appointmentList.stream().map(appointmentMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

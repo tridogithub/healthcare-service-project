@@ -18,7 +18,6 @@ import com.trido.healthcare.util.SearchUtils;
 import com.trido.healthcare.util.search.PractitionerSearchSpecification;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +29,11 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,24 +43,29 @@ public class PractitionerServiceImpl implements PractitionerService {
             ContentType.IMAGE_GIF.getMimeType(),
             ContentType.IMAGE_PNG.getMimeType()
     );
-    @Autowired
-    private PractitionerRepository practitionerRepository;
+    private final PractitionerRepository practitionerRepository;
 
-    @Autowired
-    private PractitionerMapper practitionerMapper;
+    private final PractitionerMapper practitionerMapper;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private StorageService storageService;
+    private final StorageService storageService;
+
+    public PractitionerServiceImpl(PractitionerRepository practitionerRepository,
+                                   PractitionerMapper practitionerMapper,
+                                   UserService userService,
+                                   StorageService storageService
+    ) {
+        this.practitionerRepository = practitionerRepository;
+        this.practitionerMapper = practitionerMapper;
+        this.userService = userService;
+        this.storageService = storageService;
+    }
 
     @Override
     public List<PractitionerDto> getAllPractitioners() {
         List<Practitioner> practitionerList = practitionerRepository.findAllByActive(true);
-        List<PractitionerDto> practitionerDtoList = new ArrayList<>();
-        practitionerList.forEach(practitioner -> practitionerDtoList.add(practitionerMapper.toDto(practitioner)));
-        return practitionerDtoList;
+        return practitionerList.stream().map(practitionerMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -144,9 +148,7 @@ public class PractitionerServiceImpl implements PractitionerService {
                         practitionerFilter.getLastName(), practitionerFilter.getBirthDate(), practitionerFilter.getExperience(), practitionerFilter.getEmail(), true);
         Pageable practitionerPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SearchUtils.getSortFromListParam(sortValues));
         List<Practitioner> practitionerList = practitionerRepository.findAll(practitionerSearchSpecification, practitionerPageable).getContent();
-        List<PractitionerDto> practitionerDtoList = new ArrayList<>();
-        practitionerList.forEach(practitioner -> practitionerDtoList.add(practitionerMapper.toDto(practitioner)));
-        return practitionerDtoList;
+        return practitionerList.stream().map(practitionerMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

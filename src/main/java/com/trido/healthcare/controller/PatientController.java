@@ -3,7 +3,7 @@ package com.trido.healthcare.controller;
 import com.trido.healthcare.controller.dto.PatientDto;
 import com.trido.healthcare.domain.PatientFilter;
 import com.trido.healthcare.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +27,14 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("${api.prefix}")
+@AllArgsConstructor
 public class PatientController {
-    @Autowired
-    private PatientService patientService;
+    private final PatientService patientService;
 
     @GetMapping("/patients")
     public ResponseEntity<?> getAllPatients(PatientFilter patientFilter,
                                             Pageable pageable,
-                                            @Valid @Pattern(regexp = "[\\+|\\-][a-zA-Z]+") @RequestParam(required = false) List<String> sort
+                                            @Valid @Pattern(regexp = "[+|\\-][a-zA-Z]+") @RequestParam(required = false) List<String> sort
     ) {
         List<PatientDto> patientDtoList = patientService.searchPatients(patientFilter, pageable, sort);
         return new ResponseEntity<>(patientDtoList, HttpStatus.OK);

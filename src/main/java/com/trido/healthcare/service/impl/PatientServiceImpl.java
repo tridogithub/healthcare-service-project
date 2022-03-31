@@ -18,7 +18,6 @@ import com.trido.healthcare.util.SearchUtils;
 import com.trido.healthcare.util.search.PatientSearchSpecification;
 import org.apache.http.entity.ContentType;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -46,24 +46,29 @@ public class PatientServiceImpl implements PatientService {
             ContentType.IMAGE_PNG.getMimeType()
     );
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
 
-    @Autowired
-    private PatientMapper patientMapper;
+    private final PatientMapper patientMapper;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private StorageService storageService;
+    private final StorageService storageService;
+
+    public PatientServiceImpl(PatientRepository patientRepository,
+                              PatientMapper patientMapper,
+                              UserService userService,
+                              StorageService storageService
+    ) {
+        this.patientRepository = patientRepository;
+        this.patientMapper = patientMapper;
+        this.userService = userService;
+        this.storageService = storageService;
+    }
 
     @Override
     public List<PatientDto> getAllPatients() {
         List<Patient> patients = patientRepository.findAllByActive(true);
-        List<PatientDto> patientDtoList = new ArrayList<>();
-        patients.forEach(patient -> patientDtoList.add(patientMapper.toDto(patient)));
-        return patientDtoList;
+        return patients.stream().map(patientMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -142,9 +147,7 @@ public class PatientServiceImpl implements PatientService {
                         patientFilter.getLastName(), patientFilter.getPhoneNumber(), patientFilter.getEmail(), patientFilter.getBirthDate(), true);
         Pageable patientPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SearchUtils.getSortFromListParam(sortValues));
         List<Patient> patients = patientRepository.findAll(patientSearchSpecification, patientPageable).getContent();
-        List<PatientDto> patientDtoList = new ArrayList<>();
-        patients.forEach(patient -> patientDtoList.add(patientMapper.toDto(patient)));
-        return patientDtoList;
+        return patients.stream().map(patientMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

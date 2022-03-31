@@ -11,7 +11,7 @@ import com.trido.healthcare.service.PractitionerService;
 import com.trido.healthcare.service.UserRefreshTokenService;
 import com.trido.healthcare.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,23 +22,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @Transactional
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRefreshTokenService userRefreshTokenService;
-    @Autowired
-    private PractitionerService practitionerService;
-    @Autowired
-    private PatientService patientService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRefreshTokenService userRefreshTokenService;
+    private final PractitionerService practitionerService;
+    private final PatientService patientService;
+
+    public UserServiceImpl(UserRepository userRepository,
+                           UserMapper userMapper,
+                           PasswordEncoder passwordEncoder,
+                           UserRefreshTokenService userRefreshTokenService,
+                           @Lazy PractitionerService practitionerService,
+                           @Lazy PatientService patientService) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.userRefreshTokenService = userRefreshTokenService;
+        this.practitionerService = practitionerService;
+        this.patientService = patientService;
+    }
 
     public UserDto getUserDtoByUserId(UUID userId) {
         Optional<User> user = userRepository.findByIdAndIsDeleted(userId, false);
@@ -51,9 +60,7 @@ public class UserServiceImpl implements UserService {
 
     public List<UserDto> getAllUser() {
         List<User> users = userRepository.findAllByIsDeleted(false);
-        List<UserDto> results = new ArrayList<>();
-        users.forEach(user -> results.add(userMapper.toDto(user)));
-        return results;
+        return users.stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     public UserDto createNewUser(UserDto userDto) {

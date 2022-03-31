@@ -5,7 +5,6 @@ import com.trido.healthcare.entity.User;
 import com.trido.healthcare.entity.customuserdetails.MyUserDetails;
 import com.trido.healthcare.repository.RoleRepository;
 import com.trido.healthcare.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -18,11 +17,14 @@ import java.util.Collection;
 
 @Service
 public class MyUserDetailService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
+
+    public MyUserDetailService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
