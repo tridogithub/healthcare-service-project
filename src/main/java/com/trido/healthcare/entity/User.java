@@ -1,12 +1,15 @@
 package com.trido.healthcare.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.trido.healthcare.entity.enumm.AuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.util.UUID;
 
@@ -16,7 +19,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "user")
 public class User extends BaseEntity {
-
     private static final long serialVersionUID = 3497935890426858541L;
     @Column(unique = true, nullable = false)
     private String username;
@@ -30,6 +32,9 @@ public class User extends BaseEntity {
     private String authority;
     @Column(nullable = false)
     private UUID roleId;
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider = AuthProvider.LOCAL;
+    private String providerId;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;

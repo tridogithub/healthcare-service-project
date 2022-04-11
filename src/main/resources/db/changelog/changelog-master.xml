@@ -6,4 +6,5 @@
     <include file="/db/changelog/changes/02-create-token-store-table.xml"/>
     <include file="/db/changelog/changes/03-create-patient-practitioner-tables.xml"/>
     <include file="/db/changelog/changes/04-create-appointment-table.xml"/>
+    <include file="/db/changelog/changes/05-update-user-table-oauth2.xml"/>
 </databaseChangeLog>
