@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -116,13 +115,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public boolean existsByPatientId(String patientId) {
-        return appointmentRepository.existsByPatientId(UUID.fromString(patientId));
+    public boolean existsByPatientId(String patientId, String appointmentId) {
+        return appointmentRepository.existsByPatientIdAndId(UUID.fromString(patientId), UUID.fromString(appointmentId));
     }
 
     @Override
-    public boolean existsByPractitionerId(String practitionerId) {
-        return appointmentRepository.existsByPractitionerId(UUID.fromString(practitionerId));
+    public boolean existsByPractitionerId(String practitionerId, String appointmentId) {
+        return appointmentRepository.existsByPractitionerIdAndId(UUID.fromString(practitionerId), UUID.fromString(appointmentId));
     }
 
     private boolean checkExistingPatientAndPractitioner(UUID patientId, UUID practitionerId) {

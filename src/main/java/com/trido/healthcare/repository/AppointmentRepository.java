@@ -15,4 +15,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID>,
 
     boolean existsByPractitionerId(UUID practitionerId);
 
+    boolean existsByPatientIdAndId(UUID patientId, UUID id);
+
+    boolean existsByPractitionerIdAndId(UUID practitionerId, UUID id);
 }

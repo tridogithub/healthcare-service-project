@@ -28,7 +28,7 @@ public interface AppointmentService {
                                             List<String> sort
     );
 
-    boolean existsByPatientId(String patientId);
+    boolean existsByPatientId(String patientId, String appointmentId);
 
-    boolean existsByPractitionerId(String practitionerId);
+    boolean existsByPractitionerId(String practitionerId, String appointmentId);
 }

@@ -27,7 +27,7 @@ public class WebAuthorization {
 
     public boolean checkPractitionerWithIdAuthorization(HttpServletRequest request, String practitionerId) {
         currentUserId = BearerContextHolder.getContext().getUserId();
-        if (!Constants.PRACTITIONER_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())) {
+        if (Constants.PRACTITIONER_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())) {
             return (request.getMethod().equals(HttpMethod.GET.name()) || request.getMethod().equals(HttpMethod.PUT.name()))
                     && currentUserId.equals(practitionerId);
         }
@@ -36,7 +36,7 @@ public class WebAuthorization {
 
     public boolean checkPatientWithIdAuthorization(HttpServletRequest request, String patientId) {
         currentUserId = BearerContextHolder.getContext().getUserId();
-        if (!Constants.PATIENT_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())) {
+        if (Constants.PATIENT_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())) {
             return (request.getMethod().equals(HttpMethod.GET.name()) || request.getMethod().equals(HttpMethod.PUT.name()))
                     && currentUserId.equals(patientId);
         }
@@ -46,13 +46,24 @@ public class WebAuthorization {
     public boolean checkAppointmentWithIdAuthorization(HttpServletRequest request, String appointmentId) {
         currentUserId = BearerContextHolder.getContext().getUserId();
         if (request.getMethod().equals(HttpMethod.GET.name()) || request.getMethod().equals(HttpMethod.PUT.name())) {
-            if (!(Constants.PATIENT_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())
-                    && appointmentService.existsByPatientId(currentUserId)
-            )) {
-                return false;
+            if (Constants.PATIENT_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())
+                    && appointmentService.existsByPatientId(currentUserId, appointmentId)
+            ) {
+                return true;
             }
             return Constants.PRACTITIONER_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())
-                    && appointmentService.existsByPractitionerId(currentUserId);
+                    && appointmentService.existsByPractitionerId(currentUserId, appointmentId);
+        }
+        return false;
+    }
+
+    public boolean checkAuthorizationAccessToPractitioner(HttpServletRequest request) {
+        //antMatcher: api/practitioners GET POST
+        if (HttpMethod.POST.name().equalsIgnoreCase(request.getMethod())
+                && Constants.PATIENT_ROLE.equalsIgnoreCase(BearerContextHolder.getContext().getRoleName())) {
+            {
+                return false;
+            }
         }
         return true;
     }
