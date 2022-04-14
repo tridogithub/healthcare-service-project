@@ -1,14 +1,14 @@
 spring:
   datasource:
     #    url: jdbc:postgresql://ec2-54-85-113-73.compute-1.amazonaws.com:5432/dd26is8qghtdp7?sslmode=require&currentSchema=healthcare_service_schema
-    #    username: jnzkfgakigqmef
-    #    password: 13a9754794545114124a16425e3efc743c9a701ac274d6df507800eb8a3e3d06
-    #    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=healthcare_service_schema
-    #    username: postgres
-    #    password: 3833415
-    url: ${DATASOURCE_URL}?currentSchema=healthcare_service_schema
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
+    #    username:
+    #    password:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=healthcare_service_schema
+    username: postgres
+    password: 3833415
+    #    url: ${DATASOURCE_URL}?currentSchema=healthcare_service_schema
+    #    username: ${DATASOURCE_USERNAME}
+    #    password: ${DATASOURCE_PASSWORD}
     initialization-mode: always
 
   jpa:
@@ -26,6 +26,17 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 513247869041-aas99lg0jqr2b44hi3ud0rrp3ocr1nm7.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+            scope:
+              - email
+              - profile
 server:
   error:
     include-message: always
@@ -36,4 +47,6 @@ jwt:
   refresh-token-validity: 86400
 api:
   prefix: /api
+oauth2:
+  authorizedRedirectUrl: http://localhost:3000/redirect
 
