@@ -1,11 +1,11 @@
 spring:
   datasource:
-    #    url: jdbc:postgresql://ec2-54-85-113-73.compute-1.amazonaws.com:5432/dd26is8qghtdp7?sslmode=require&currentSchema=healthcare_service_schema
+    #    url:
     #    username:
     #    password:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=healthcare_service_schema
     username: postgres
-    password: 3833415
+    password: 
     #    url: ${DATASOURCE_URL}?currentSchema=healthcare_service_schema
     #    username: ${DATASOURCE_USERNAME}
     #    password: ${DATASOURCE_PASSWORD}
