@@ -31,8 +31,8 @@ spring:
       client:
         registration:
           google:
-            clientId: 513247869041-aas99lg0jqr2b44hi3ud0rrp3ocr1nm7.apps.googleusercontent.com
-            clientSecret: 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
+            clientId: {clientId}
+            clientSecret: {clientSecret}
             redirectUri: "http://localhost:8080/login/oauth2/code/{registrationId}"
             scope:
               - email
